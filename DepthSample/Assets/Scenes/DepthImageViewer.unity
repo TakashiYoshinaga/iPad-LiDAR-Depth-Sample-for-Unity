@@ -321,7 +321,7 @@ MonoBehaviour:
   m_originalDepthView: {fileID: 1114040582}
   m_grayDepthView: {fileID: 347273445}
   near: 0.2
-  far: 4
+  far: 3
 --- !u!4 &165585585
 Transform:
   m_ObjectHideFlags: 0
