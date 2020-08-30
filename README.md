@@ -1,4 +1,4 @@
-# iPad-LiDAR-Depth-Sample
+# iPad LiDAR Depth Sample for Unity
  This sample shows you how to access depth pixels.<br>
  <img src="https://github.com/TakashiYoshinaga/iPad-LiDAR-Depth-Sample/blob/master/images/capture.png?raw=true" width=400></img>
  
