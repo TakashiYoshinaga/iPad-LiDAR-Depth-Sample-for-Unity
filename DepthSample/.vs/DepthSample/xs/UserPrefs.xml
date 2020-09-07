@@ -1,0 +1,14 @@
+﻿<Properties StartupConfiguration="{3B253B03-D176-0E20-6168-A5EEB948F040}|">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/DepthScript.cs">
+    <Files>
+      <File FileName="Assets/DepthScript.cs" Line="159" Column="82" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="3f08e9ef-5adc-40d9-8ae5-7157b4ffbc97" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>

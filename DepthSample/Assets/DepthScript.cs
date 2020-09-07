@@ -19,6 +19,8 @@ public class DepthScript : MonoBehaviour
     RawImage m_originalDepthView;
     [SerializeField]
     RawImage m_grayDepthView;
+    [SerializeField]
+    RawImage m_confidenceView;
 
 
     [SerializeField]
@@ -29,6 +31,8 @@ public class DepthScript : MonoBehaviour
     Texture2D m_CameraTexture;
     Texture2D m_DepthTextureFloat;
     Texture2D m_DepthTextureBGRA;
+    Texture2D m_DepthConfidenceR8;
+    Texture2D m_DepthConfidenceRGBA;
 
     void OnEnable()
     {
@@ -128,6 +132,38 @@ public class DepthScript : MonoBehaviour
 
     }
 
+    void UpdateEnvironmentConfidenceImage()
+    {
+
+        // Attempt to get the latest environment depth image. If this method succeeds,
+        // it acquires a native resource that must be disposed (see below).
+        if (!m_OcclusionManager.TryAcquireEnvironmentDepthConfidenceCpuImage(out XRCpuImage image))
+        {
+            return;
+        }
+
+        using (image)
+        {
+            if (m_DepthConfidenceR8 == null || m_DepthConfidenceR8.width != image.width || m_DepthConfidenceR8.height != image.height)
+            {
+                m_DepthConfidenceR8 = new Texture2D(image.width, image.height, image.format.AsTextureFormat(), false);
+                print(image.format.AsTextureFormat());
+            }
+            if (m_DepthConfidenceRGBA == null || m_DepthConfidenceRGBA.width != image.width || m_DepthConfidenceRGBA.height != image.height)
+            {
+                m_DepthConfidenceRGBA = new Texture2D(image.width, image.height, TextureFormat.BGRA32, false);
+                
+            }
+            UpdateRawImage(m_DepthConfidenceR8, image);
+
+            ConvertR8ToConfidenceMap(m_DepthConfidenceR8, m_DepthConfidenceRGBA);
+
+
+            m_confidenceView.texture = m_DepthConfidenceRGBA;
+        }
+
+    }
+
     void UpdateRawImage(Texture2D texture, XRCpuImage cpuImage)
     {
 
@@ -172,12 +208,43 @@ public class DepthScript : MonoBehaviour
         txGray.Apply();
     }
 
+    void ConvertR8ToConfidenceMap(Texture2D txR8, Texture2D txRGBA) {
+        Color32[] r8 = txR8.GetPixels32();
+        Color32[] rgba = txRGBA.GetPixels32();
+        for (int i = 0; i < r8.Length; i++)
+        {
+            switch (r8[i].r)
+            {
+                case 0:
+                    rgba[i].r = 255;
+                    rgba[i].g = 0;
+                    rgba[i].b = 0;
+                    rgba[i].a = 255;
+                    break;
+                case 1:
+                    rgba[i].r = 0;
+                    rgba[i].g = 255;
+                    rgba[i].b = 0;
+                    rgba[i].a = 255;
+                    break;
+                case 2:
+                    rgba[i].r = 0;
+                    rgba[i].g = 0;
+                    rgba[i].b = 255;
+                    rgba[i].a = 255;
+                    break;
+            }
+        }
+        txRGBA.SetPixels32(rgba);
+        txRGBA.Apply();
+    }
 
 
     void OnCameraFrameReceived(ARCameraFrameEventArgs eventArgs)
     {
         UpdateCameraImage();
         UpdateEnvironmentDepthImage();
+        UpdateEnvironmentConfidenceImage();
     }
 
     // Start is called before the first frame update
