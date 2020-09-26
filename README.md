@@ -1,8 +1,10 @@
 # iPad LiDAR Depth Sample for Unity
- This sample shows you how to access depth pixels.<br>
+## Depth Image Viewer
+This sample shows you how to access depth pixels.<br>
  <img src="https://github.com/TakashiYoshinaga/iPad-LiDAR-Depth-Sample/blob/master/images/capture.png?raw=true" width=400></img>
  
+## Point Cloud Viewer
+This sample shows you how to reproject depth image into 3D space.<br>
+YouTube video is below!<br>
+[![](http://img.youtube.com/vi/bkPT5-gCwcE/0.jpg)](http://www.youtube.com/watch?v=bkPT5-gCwcE "")
  <br><br>
- ## Reference
- This is based on DepthImgages included in ARFoundation Samples by Unity Technologies.<br>
- https://github.com/Unity-Technologies/arfoundation-samples
