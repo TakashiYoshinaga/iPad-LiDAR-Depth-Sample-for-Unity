@@ -1,12 +1,12 @@
-﻿<Properties StartupConfiguration="{3B253B03-D176-0E20-6168-A5EEB948F040}|">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/DepthScript.cs">
+﻿<Properties>
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/PointCloudScript.cs">
     <Files>
-      <File FileName="Assets/DepthScript.cs" Line="159" Column="82" />
+      <File FileName="Assets/Scripts/PointCloudScript.cs" Line="325" Column="72" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="3f08e9ef-5adc-40d9-8ae5-7157b4ffbc97" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="0bfe5bd4-9fe4-483f-8b43-818b18f0dcd9" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
