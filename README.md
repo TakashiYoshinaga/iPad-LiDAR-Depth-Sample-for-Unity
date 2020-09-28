@@ -10,5 +10,5 @@ YouTube video is below!<br>
 
 ## High Confidence Point Cloud Viewer
 This sample shows you how to reproject high confidence depth information into 3D space.<br>
-Output view is almost similar to Point Cloud Viewer.<br>
+Output view is almost similar to Point Cloud Viewer.But low confidence depth pixels are rejected.<br>
  <br><br>
