@@ -22,7 +22,6 @@ public class DepthScript : MonoBehaviour
     [SerializeField]
     RawImage m_confidenceView;
 
-
     [SerializeField]
     float near;
     [SerializeField]
@@ -50,7 +49,14 @@ public class DepthScript : MonoBehaviour
         }
     }
 
-    unsafe void UpdateCameraImage()
+    void OnCameraFrameReceived(ARCameraFrameEventArgs eventArgs)
+    {
+        UpdateCameraImage();
+        UpdateEnvironmentDepthImage();
+        UpdateEnvironmentConfidenceImage();
+    }
+
+    void UpdateCameraImage()
     {
 
         // Attempt to get the latest camera image. If this method succeeds,
@@ -73,20 +79,8 @@ public class DepthScript : MonoBehaviour
                 m_CameraTexture = new Texture2D(image.width, image.height, format, false);
             }
 
-            // Convert the image to format, flipping the image across the Y axis.
-            // We can also get a sub rectangle, but we'll get the full image here.
-            var conversionParams = new XRCpuImage.ConversionParams(image, format, XRCpuImage.Transformation.MirrorY);
-
-            // Texture2D allows us write directly to the raw texture data
-            // This allows us to do the conversion in-place without making any copies.
-            var rawTextureData = m_CameraTexture.GetRawTextureData<byte>();
-
-            //Convert XRCpuImage into RGBA32
-            image.Convert(conversionParams, new IntPtr(rawTextureData.GetUnsafePtr()), rawTextureData.Length);
-
-
-            // Apply the updated texture data to our texture
-            m_CameraTexture.Apply();
+           
+            UpdateRawImage(m_CameraTexture, image, format);
 
             // Set the RawImage's texture so we can visualize it.
             m_cameraView.texture = m_CameraTexture;
@@ -119,7 +113,7 @@ public class DepthScript : MonoBehaviour
             }
 
             //Acquire Depth Image (RFloat format). Depth pixels are stored with meter unit.
-            UpdateRawImage(m_DepthTextureFloat, image);
+            UpdateRawImage(m_DepthTextureFloat, image, image.format.AsTextureFormat());
             //Visualize 0~1m depth.
             m_originalDepthView.texture = m_DepthTextureFloat;
 
@@ -154,7 +148,7 @@ public class DepthScript : MonoBehaviour
                 m_DepthConfidenceRGBA = new Texture2D(image.width, image.height, TextureFormat.BGRA32, false);
                 
             }
-            UpdateRawImage(m_DepthConfidenceR8, image);
+            UpdateRawImage(m_DepthConfidenceR8, image, image.format.AsTextureFormat());
 
             ConvertR8ToConfidenceMap(m_DepthConfidenceR8, m_DepthConfidenceRGBA);
 
@@ -164,13 +158,10 @@ public class DepthScript : MonoBehaviour
 
     }
 
-    void UpdateRawImage(Texture2D texture, XRCpuImage cpuImage)
+    unsafe void UpdateRawImage(Texture2D texture, XRCpuImage cpuImage, TextureFormat format)
     {
-
-
-
         // For display, we need to mirror about the vertical access.
-        var conversionParams = new XRCpuImage.ConversionParams(cpuImage, cpuImage.format.AsTextureFormat(), XRCpuImage.Transformation.MirrorY);
+        var conversionParams = new XRCpuImage.ConversionParams(cpuImage, format, XRCpuImage.Transformation.MirrorY);
 
         // Get the Texture2D's underlying pixel buffer.
         var rawTextureData = texture.GetRawTextureData<byte>();
@@ -181,15 +172,14 @@ public class DepthScript : MonoBehaviour
 
         // Perform the conversion.
         cpuImage.Convert(conversionParams, rawTextureData);
-
+        //cpuImage.Convert(conversionParams, new IntPtr(rawTextureData.GetUnsafePtr()), rawTextureData.Length);
         // "Apply" the new pixel data to the Texture2D.
         texture.Apply();
     }
 
     void ConvertFloatToGrayScale(Texture2D txFloat, Texture2D txGray)
     {
-
-        //Conversion of grayscale from near to far value
+       //Conversion of grayscale from near to far value
         int length = txGray.width * txGray.height;
         Color[] depthPixels = txFloat.GetPixels();
         Color[] colorPixels = txGray.GetPixels();
@@ -238,21 +228,4 @@ public class DepthScript : MonoBehaviour
         txRGBA.SetPixels32(rgba);
         txRGBA.Apply();
     }
-
-
-    void OnCameraFrameReceived(ARCameraFrameEventArgs eventArgs)
-    {
-        UpdateCameraImage();
-        UpdateEnvironmentDepthImage();
-        UpdateEnvironmentConfidenceImage();
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-
-
 }

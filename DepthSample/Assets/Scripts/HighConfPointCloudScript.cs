@@ -80,20 +80,7 @@ public class HighConfPointCloudScript : MonoBehaviour
                 m_CameraTexture = new Texture2D(image.width, image.height, format, false);
             }
 
-            // Convert the image to format, flipping the image across the Y axis.
-            // We can also get a sub rectangle, but we'll get the full image here.
-            var conversionParams = new XRCpuImage.ConversionParams(image, format, XRCpuImage.Transformation.MirrorY);
-
-            // Texture2D allows us write directly to the raw texture data
-            // This allows us to do the conversion in-place without making any copies.
-            var rawTextureData = m_CameraTexture.GetRawTextureData<byte>();
-
-            //Convert XRCpuImage into RGBA32
-            image.Convert(conversionParams, new IntPtr(rawTextureData.GetUnsafePtr()), rawTextureData.Length);
-
-
-            // Apply the updated texture data to our texture
-            m_CameraTexture.Apply();
+            UpdateRawImage(m_CameraTexture, image, format);
 
             // Set the RawImage's texture so we can visualize it.
             m_cameraView.texture = m_CameraTexture;
@@ -126,7 +113,7 @@ public class HighConfPointCloudScript : MonoBehaviour
             }
 
             //Acquire Depth Image (RFloat format). Depth pixels are stored with meter unit.
-            UpdateRawImage(m_DepthTexture_Float, image);
+            UpdateRawImage(m_DepthTexture_Float, image, image.format.AsTextureFormat());
         
             //Convert RFloat into Grayscale Image between near and far clip area.
             ConvertFloatToGrayScale(m_DepthTexture_Float, m_DepthTexture_BGRA);
@@ -159,7 +146,7 @@ public class HighConfPointCloudScript : MonoBehaviour
                 m_DepthConfidenceTexture_RGBA = new Texture2D(image.width, image.height, TextureFormat.BGRA32, false);
                 
             }
-            UpdateRawImage(m_DepthConfidenceTexture_R8, image);
+            UpdateRawImage(m_DepthConfidenceTexture_R8, image, image.format.AsTextureFormat());
 
             ConvertR8ToConfidenceMap(m_DepthConfidenceTexture_R8, m_DepthConfidenceTexture_RGBA);
 
@@ -169,11 +156,10 @@ public class HighConfPointCloudScript : MonoBehaviour
 
     }
 
-    void UpdateRawImage(Texture2D texture, XRCpuImage cpuImage)
+    unsafe void UpdateRawImage(Texture2D texture, XRCpuImage cpuImage, TextureFormat format)
     {
-
         // For display, we need to mirror about the vertical access.
-        var conversionParams = new XRCpuImage.ConversionParams(cpuImage, cpuImage.format.AsTextureFormat(), XRCpuImage.Transformation.MirrorY);
+        var conversionParams = new XRCpuImage.ConversionParams(cpuImage, format, XRCpuImage.Transformation.MirrorY);
 
         // Get the Texture2D's underlying pixel buffer.
         var rawTextureData = texture.GetRawTextureData<byte>();
@@ -184,7 +170,7 @@ public class HighConfPointCloudScript : MonoBehaviour
 
         // Perform the conversion.
         cpuImage.Convert(conversionParams, rawTextureData);
-
+        //cpuImage.Convert(conversionParams, new IntPtr(rawTextureData.GetUnsafePtr()), rawTextureData.Length);
         // "Apply" the new pixel data to the Texture2D.
         texture.Apply();
     }
