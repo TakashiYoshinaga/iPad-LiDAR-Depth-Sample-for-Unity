@@ -1,0 +1,21 @@
+﻿<Properties StartupConfiguration="{3B253B03-D176-0E20-6168-A5EEB948F040}|">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/DepthScript.cs">
+    <Files>
+      <File FileName="Assets/Scripts/DepthScript.cs" Line="37" Column="6" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="DepthSample" expanded="True" selected="True" />
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="06f2b897-b9b4-4b8a-bd55-e4a7bf41633a" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
